@@ -98,8 +98,76 @@ $ git reset --hard HEAD^
     只用dev，看不到历史改动
     $ git merge --no-ff -m "merge with no-ff" dev
     -m 把commit描述写进去
+
+20修复BUG，用分支，修复后合并分支，删掉BUG分支
+
+21 $ git stash把当前工作现场隐藏起来
+   当工作现场隐藏起来的时候可以用$ git stash list查看
+   工作现场还在，Git把stash内容存在某个地方了，但是需要恢复一下，有两个办法：
+   一是用git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除；
+   另一种方式是用git stash pop，恢复的同时把stash内容也删了：
+   
+22 开发新功能feature，最好再建立一个分支
+   如果要丢弃一个没有被合并过的分支，可以通过git branch -D <name>强行删除。
+
+
+23 git remote -v显示远程库更详细的信息
+ 
+   多人协助
+  
+  / 推送分支：git push origin master 推送本地分支上所有代码
+             git push origin dev    只推送dev分支到远程库
+1，该分支   指的是【$ git push origin 本地分支名】 这句话中的分支
+ 2，origin只是被clone的Github上的版本库，相当于当前被clone的版本库gitskills的别名就是 origin
+ 3，$ git push origin master 这句话中的master是指本地的master，并非是github中远程库的master。
+ / 抓取分支
+ $ git clone git@github.com:bettering/learngit.git   bettering是github帐户名    learngit.git是ropo名字
+ 要在dev分支上开发，就必须创建远程origin的dev分支到本地，于是用这个命令创建本地dev分支：
+   $ git checkout -b dev origin/dev
+   修改后推送到远程库
+
+  4，要是在本地版本库中创建分支 ceshi  与github中远程库origin的 一个分支 ceshi_1相关联（假设远程库中已经有ceshi_1分支）【$ git checkout -b ceshi origin/ceshi_1】，那么要是在 本地执行
+
+  $ git push origin ceshi ——意思是在github上的远程库（origin）上创建分支 ceshi，并将本地ceshi分支的内容推送（push）到远程库（origin）上的新分支 ceshi上，而不是 推送到所谓与之关联的 ceshi_1上
+因此要是想推送到相关联的ceshi_1上，就要这样写 $ git push remote ceshi:ceshi_1
+所以在创建本地版本库的分支和远程分支相关联的时候，名称最好起的一样
+ 
+ 恰巧你推送的分支与队员分支有冲突
+ 建立本地分支与远程origin/dev建立连接
+ $ git branch --set-upstream dev origin/dev
+ 再把origin/dev抓取下来
+ 在本地合并，解决冲突，再推送到远程
+ 
+ 总结：多人协作的工作模式通常是这样：
+首先，可以试图用git push origin branch-name推送自己的修改；
+如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；
+如果合并有冲突，则解决冲突，并在本地提交；
+没有冲突或者解决掉冲突后，再用git push origin branch-name推送就能成功！
+如果git pull提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream branch-name origin/branch-name。
   
   
+  在Git中打标签非常简单，首先，切换到需要打标签的分支上：
+$ git branch
+* dev
+  master
+$ git checkout master
+Switched to branch 'master'
+然后，敲命令git tag <name>就可以打一个新标签：
+$ git tag v1.0
+可以用命令git tag查看所有标签：
+$ git tag
+v1.0
+默认标签是打在最新提交的commit上的。
+
+
+
+
+创建标签
+首先切换到要创建标签的分支上
+$ git branch
+敲命令git tag <name>就可以打一个新标签：
+$ git tag v1.0
+git tag可以查看所有标签
   
   
   
